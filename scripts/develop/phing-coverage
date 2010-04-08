@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This script is a friendy wrapper for phing coverage.
+#
+# Usage:
+#
+#   ./phing-coverage                   - runs all testcases on clean db with coverage
+#
+#   ./phing-coverage DistributorTest   - runs single testcase with coverage
+#                                       (in this case - DistributorTest)
+#                                       without clearing DB
+#
+
+if [ -z "$1" ]; then
+    phing coverage
+else
+    phing coverage1 -Dtest.single=$1
+fi
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="test" default="help">
+    <taskdef classname="System.Phing.Task.PhpUnit3Task" name="phpunit34" />
+    
+	<target name="_init-test" description="Phing constructor for testing">
+		<property name="environment" value="testing"/>
+		<echo>Testing environment is turned on</echo>
+	</target>
+
+
+	<target name="_init-dirs" depends="_init" description="Create report dirs">
+		<delete dir="${path.build}" includeemptydirs="true" verbose="false" failonerror="false" />
+		<mkdir dir="${path.build}" />
+		<mkdir dir="${path.build}/reports" />
+		<mkdir dir="${path.build}/reports/tests" />
+		<mkdir dir="${path.build}/reports/coverage" />
+		<mkdir dir="${path.build}/reports/tests-cli" />
+		<mkdir dir="${path.build}/reports/coverage-cli" />
+		<mkdir dir="${path.build}/reports/groups" />
+	</target>
+
+	<target name="test" depends="_init-test, _init-dirs, _create-and-fresh-db-test" description="Run PHPUnit tests">
+		<phpunit34
+			haltonfailure="false"
+			haltonerror="false"
+			failureproperty="phing.phpunit.failure"
+			errorproperty="phing.phpunit.error"
+			incompleteproperty="phing.phpunit.incomplete"
+			skippedproperty="phing.phpunit.skipped"
+			bootstrapfile="${path.tests}/bootstrap.php" >
+			<formatter todir="${path.build}/reports/tests" classname="System.Phing.Task.PhpUnit3.JUnitResultFormatter"/>
+			<formatter type="plain" usefile="false" />
+			<batchtest>
+				<fileset dir="${path.tests}">
+					<include name="**/*Test*.php"/>
+				</fileset>
+			</batchtest>
+		</phpunit34>
+
+		<phpunitreport infile="${path.build}/reports/tests/testsuites.xml"
+			format="frames"
+			todir="${path.build}/reports/tests"
+			styledir="${path.pear}/data/phing/etc"/>
+	</target>
+
+	<target name="_create-and-fresh-db-test" depends="_init-test, createdb, freshdb" description="Create new db if it does not exist and fresh it">
+	</target>
+</project>

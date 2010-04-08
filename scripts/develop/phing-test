@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This script is a friendy wrapper for phing test.
+#
+# Usage:
+#
+#   ./phing-test                    - runs all testcases on clean db
+#
+#   ./phing-test DistributorTest    - runs single testcase
+#                                     (in this case - DistributorTest)
+#                                     without clearing DB
+#
+
+if [ -z "$1" ]; then
+    phing test
+else
+    phing test1 -Dtest.single=$1
+fi
+

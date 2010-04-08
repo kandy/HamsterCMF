@@ -1,0 +1,54 @@
+dl.zend_form{
+}
+	dl.zend_form dt label.required { 
+		font-weight: 400; 
+		}
+	dl.zend_form dd ul.errors {
+		list-style: none;
+	}
+	
+	dl.zend_form dd ul.errors li {
+		font-size: 12px;
+		color: red;
+	}
+	
+	
+.center-col dl.zend_form{
+	overflow: auto; 
+}
+	
+	.center-col dl.zend_form dt, dd { 
+		min-height: 30px; 
+	}
+	
+	.center-col dl.zend_form dt {
+		float: left;
+		clear: left;
+		text-align: right;
+		width: 30%;
+		max-width: 30ex;
+	}
+	
+		.center-col dl.zend_form dt label.required { 
+			font-weight: 400; 
+		}
+	
+	.center-col dl.zend_form dd {
+		float: left;
+		clear: right;
+		padding-left: 5px;
+	}
+	
+		.center-col dl.zend_form dd ul.errors {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+		
+			.center-col dl.zend_form dd ul.errors li {
+				margin: 0 0.15em;
+				font-size: 12px;
+				color: red;
+				
+			}
+	

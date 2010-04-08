@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ulybka" default="help">
+
+	<includepath classpath="../system" />
+
+    <taskdef classname="System.Phing.Task.ConfigAdapterTask" name="system-config-adapter" />
+	<taskdef classname="System.Phing.Task.BootstrapResourceTask" name="bootstrap-resource" />
+
+	<target name="_init" description="Phing constructor">
+		<property name="environment" value="main" override="false"/>
+		<system-config-adapter environment="${environment}"/>
+	</target>
+
+	<target name="help" description="Usage help">
+		<echo>Don't worry ${env.USER}, help is coming! </echo>
+		<echo>Try phing -l</echo>
+	</target>
+	
+	<target name="jsdoc" depends="_init" description="Create JS Documentation">
+		<mkdir dir="${path.build}/docs/jsdoc" />
+		<exec command="java -jar library/jsdoc_toolkit/jsdoc-toolkit/jsrun.jar library/jsdoc_toolkit/jsdoc-toolkit/app/run.js -a -s -p -v -t=library/jsdoc_toolkit/jsdoc-toolkit/templates/jsdoc -d=${path.build}/docs/jsdoc/ webroot/static/app" passthru="true"/>
+	</target>
+
+	<target name="doxygen" depends="_init" description="Generate PHP Documentation with doxygen">
+		<mkdir dir="${path.build}/docs/apidocs"/>
+		<exec command="doxygen" dir="${path.root}" passthru="true" />
+	</target>
+
+	<!-- This one is not used, left here only as an example --> 
+	<target name="phpdoc" depends="_init" description="Generate PHP Documentation with phpdoc">
+		<mkdir dir="${path.build}/docs/phpdocs"/>
+		<exec command="phpdoc -t ${path.build}/docs/phpdocs -o HTML:default:default -d application/,library/" dir="${path.root}" passthru="true" />
+	</target>
+
+	<target name="apidoc" depends="doxygen, jsdoc" description="Generate documentation">
+		<copy file="scripts/docs_index.html" tofile="${path.build}/docs/index.html" overwrite="true"/>
+	</target>	
+
+	<target name="config" depends="_init, config-nginx" description="Generate project configs">
+		<echo>Configuration complete!</echo>
+	</target>
+	
+	<target name="config-nginx" depends="_init" description="Generate nginx.conf from template with expands properties in it">
+		<echo>Generating nginx.conf</echo>
+		<copy overwrite="true"
+			tstamp="false"
+			file="${path.configsTemplates}/nginx.conf.tmpl"
+			tofile="${path.configs}/nginx.conf">
+			<filterchain>
+				<expandproperties />
+			</filterchain>
+		</copy>
+		<echo>Place ${path.configs}/nginx.conf in nginx config path and restart it or run $nginx -f ${path.configs}/nginx.conf</echo>
+	</target>
+
+	<target name="createdb" depends="_init" description="Create database">
+		<phing phingfile="scripts/db.xml" target="createdb"/>
+	</target>
+	
+	<target name="freshdb" depends="_init" description="Resets the database">
+		<phing phingfile="scripts/db.xml" target="freshdb"/>
+	</target>
+
+	<target name="dep" description="Check project dependencies for production/runtime">
+		<phing phingfile="scripts/dep.xml" target="dep" />
+	</target>
+	
+	<target name="devdep" description="Check project dependencies for development">
+		<phing phingfile="scripts/dep.xml" target="devdep" />
+	</target>
+	
+	<target name="populate" description="Populate db" depends="createdb, freshdb">
+		<exec command="php zf-app.php -c developer -a populate"></exec>
+	</target>
+	
+</project>

@@ -1,0 +1,9 @@
+<div class="box blog-post">
+	<h1 tal:content="post/title"></h1>
+	<div class="time-line" tal:content="post/publishedAt"></div>
+	<div class="content" tal:content="structure post/text"></div>
+	<a tal:attributes="href post/url">Источник</a>
+	<ul>
+		<li tal:repeat="tag php: post.getTags()" tal:content="tag"></li>
+	</ul>
+</div>

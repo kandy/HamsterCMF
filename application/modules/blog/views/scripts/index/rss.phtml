@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+	<title>Новости</title>
+		<image>
+			<title>Последние новости Украины и мира</title>
+			<url></url>
+			<link>http://korrespondent.net/</link>
+			<width>144</width>
+			<height>30</height>
+			<description>Информационно-новостной портал №1 в Украине. Объективно о событиях по всему миру.</description>
+		</image>
+		<link>/</link>
+	<description><![CDATA[Новости раздела]]></description>
+	<language>ru</language>
+	<copyright>Copyright 2008</copyright>
+	<managingEditor>korrespondent@kpmedia.ua</managingEditor>
+
+		<item tal:repeat="blog blogs">
+			<title>${blog/title}</title>
+			<description>${blog/description}</description>
+			<fulltext>TODO: Add</fulltext>
+			<pubDate>${blog/publishedAt}</pubDate>
+			<link>blog/post/${blog/id}</link>
+		</item>
+
+	</channel>
+</rss>

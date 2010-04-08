@@ -1,0 +1,101 @@
+.window{
+	margin-right: 5px;
+}
+
+	.window .wbody{
+		border: 0 solid #000;
+		border-width: 0px 5px;
+		background-color: #ccc;
+		padding: 3px 10px;
+		overflow: auto;
+	}
+	.window .header, .window .footer{
+		clear: both;
+	}
+	.window .header>span, .window .footer>span{
+		display: block;
+		background: transparent url('image/window-black.png');
+	}
+	.window .header .botton{
+		float:right;
+		width: 13px;
+		height: 21px;
+		background-position: 100% -64px;
+	}
+	.window .header .icon{
+		width: 12px;
+		float:left;
+		height: 21px;
+		background-position:  0px 0px ;
+	}
+	.window .header .text{
+		color: #eee;
+		font-size: 12px;
+		line-size: 23px;
+		height: 21px;
+		margin: 0px 10px;
+		background-position:  0px -32px ;
+	}
+
+	/* Foter ===========  */
+	.window .footer span{
+		height: 8px;
+		font-size: 8px;
+		line-size: 7px;
+	}
+	.window .footer .botton{
+		float:right;
+		width: 13px;
+		background-position:  100% -182px ;
+	}
+	.window .footer .icon{
+		width: 12px;
+		float:left;
+		background-position:  0px -120px ;
+	}
+	.window .footer .text{
+		color: #eee;
+		margin: 0px 10px;
+		background-position:  0px -151px ;
+	}
+	
+.mainPanel .header>span, .mainPanel .footer>span {
+		display: block;
+		background: transparent url('image/window-black.png');
+}
+
+/* Tabs*/
+.window .header ul{
+	margin: 0px;
+	padding: 0px;
+	list-style:none;
+	width: 100%;
+}
+.window .header ul li {
+	margin: 0px;
+	padding: 0px;
+
+	float:left;
+
+	padding-left: 6px;
+
+	height: 21px;
+	margin-right: -6px;
+	
+}
+
+.window .header ul li.selected {
+	background-color:  #ccc;
+	position: relative;
+}
+.window .header ul li a{
+	text-decoration: none;
+	display:block;
+	color: #fff;
+}
+
+.window .header ul li a span{
+	margin: 0 15px 0px 10px;
+	background-image: none;
+}
+

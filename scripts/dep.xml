@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="S4" default="help">
+
+	<includepath classpath="library" />
+	
+	<taskdef classname="System.Phing.Task.DependenciesTask" name="dependencies" />
+
+	<target name="help" description="Usage help">
+		<echo>Don't worry ${env.USER}, help is coming! </echo>
+		<echo>Try $phing -l</echo>
+	</target>
+	
+	<target name="dep" description="Check project dependencies for production/runtime">
+		<dependencies>
+			<functions>
+				<function>version_compare</function>
+				<function>get_loaded_extensions</function>
+				<function>finfo_open</function>
+			</functions>
+			<constants>
+				<constant>PHP_VERSION</constant>
+			</constants>
+			<phpversion min="5.2.6" max="5.3.0" />
+			<extensions>
+				<extension>SPL</extension>
+				<extension>pcre</extension>
+				<extension>date</extension>
+				<extension>session</extension>
+				<extension>mysql</extension>
+				<extension>mbstring</extension>
+				<extension>hash</extension>
+				<extension>PDO</extension>
+				<extension>dom</extension>
+				<extension>SimpleXML</extension>
+				<extension>pdo_mysql</extension>
+				<extension>xsl</extension>
+				<extension>iconv</extension>
+				<extension>imagick</extension>
+			</extensions>
+			<configuration>
+				<parameter name="allow_call_time_pass_reference" value="Off" />
+				<parameter name="arg_separator.input" value="&amp;" />
+				<parameter name="arg_separator.output" value="&amp;amp;amp;" />
+				<parameter name="asp_tags" value="Off" />
+				<parameter name="auto_append_file" value="" />
+				<parameter name="auto_prepend_file" value="" />
+				<parameter name="file_uploads" value="On" />
+				<parameter name="magic_quotes_gpc" value="Off" />
+				<parameter name="magic_quotes_runtime" value="Off" />
+				<parameter name="magic_quotes_sybase" value="Off" />
+				<parameter name="open_basedir" value="" />
+				<parameter name="register_argc_argv" value="On" />
+				<parameter name="register_globals" value="Off" />
+				<parameter name="safe_mode" value="Off" />
+				<parameter name="serialize_precision" value="100" />
+				<parameter name="y2k_compliance" value="On" />
+				<parameter name="zend.ze1_compatibility_mode" value="Off" />
+				<parameter name="mbstring.language" value="neutral" />
+				<parameter name="mbstring.internal_encoding" value="utf8" />
+				<parameter name="mbstring.func_overload" value="0" />
+			</configuration>
+			<includes>
+				<include>PEAR.php</include>
+				<include>PEAR/Registry.php</include>
+			</includes>
+			<pear>
+				<package name="pear" min="1.7.1" channel="pear.php.net" />
+				<package name="archive_tar" min="1.3.2" channel="pear.php.net" />
+				<package name="log" min="1.10.0" channel="pear.php.net" />
+				<package name="Mail_Mime" min="1.5.2" channel="pear.php.net" />
+				<package name="Mail" min="1.1.14" channel="pear.php.net" />
+				<package name="Net_SMTP" min="1.2.11" channel="pear.php.net" />
+				<package name="zend" min="1.8.3" channel="zend.googlecode.com/svn" />
+			</pear>
+			<shells>
+				<shell name="nginx" command="nginx -V" min="0.5.33" max="0.8.15" />
+			</shells>
+		</dependencies>
+	</target>
+	
+	<target name="devdep" description="Check project dependencies for development">
+		<dependencies>
+			<functions>
+				<function>version_compare</function>
+				<function>get_loaded_extensions</function>
+				<function>finfo_open</function>
+			</functions>
+			<constants>
+				<constant>PHP_VERSION</constant>
+			</constants>
+			<phpversion min="5.2.6" max="5.3.0" />
+			<extensions>
+				<extension>SPL</extension>
+				<extension>pcre</extension>
+				<extension>date</extension>
+				<extension>session</extension>
+				<extension>mysql</extension>
+				<extension>mbstring</extension>
+				<extension>hash</extension>
+				<extension>PDO</extension>
+				<extension>dom</extension>
+				<extension>SimpleXML</extension>
+				<extension>pdo_mysql</extension>
+				<extension>xsl</extension>
+				<extension>iconv</extension>
+			</extensions>
+			<configuration>
+				<parameter name="allow_call_time_pass_reference" value="Off" />
+				<parameter name="arg_separator.input" value="&amp;" />
+				<parameter name="arg_separator.output" value="&amp;amp;amp;" />
+				<parameter name="asp_tags" value="Off" />
+				<parameter name="auto_append_file" value="" />
+				<parameter name="auto_prepend_file" value="" />
+				<parameter name="file_uploads" value="On" />
+				<parameter name="magic_quotes_gpc" value="Off" />
+				<parameter name="magic_quotes_runtime" value="Off" />
+				<parameter name="magic_quotes_sybase" value="Off" />
+				<parameter name="open_basedir" value="" />
+				<parameter name="register_argc_argv" value="On" />
+				<parameter name="register_globals" value="Off" />
+				<parameter name="safe_mode" value="Off" />
+				<parameter name="serialize_precision" value="100" />
+				<parameter name="y2k_compliance" value="On" />
+				<parameter name="zend.ze1_compatibility_mode" value="Off" />
+				<parameter name="mbstring.language" value="neutral" />
+				<parameter name="mbstring.internal_encoding" value="utf8" />
+				<parameter name="mbstring.func_overload" value="0" />
+			</configuration>
+			<includes>
+				<include>PEAR.php</include>
+				<include>PEAR/Registry.php</include>
+				<include>Zend/Version.php</include>
+			</includes>
+			<pear>
+				<package name="pear" min="1.7.1" channel="pear.php.net" />
+				<package name="archive_tar" min="1.3.2" channel="pear.php.net" />
+				<package name="log" min="1.10.0" channel="pear.php.net" />
+				<package name="Mail_Mime" min="1.5.2" channel="pear.php.net" />
+				<package name="Mail" min="1.1.14" channel="pear.php.net" />
+				<package name="Net_SMTP" min="1.2.11" channel="pear.php.net" />
+				<package name="phing" min="2.3.0" channel="pear.phing.info" />
+				<package name="phpunit" min="3.4.0" max="3.4.10" channel="pear.phpunit.de" />
+				<package name="zend" min="1.8.3" channel="zend.googlecode.com/svn" />
+				<package name="PhpDocumentor" min="1.4.3" channel="pear.php.net" />
+			</pear>
+			<shells>
+				<shell name="nginx" command="nginx -V" min="0.5.33" max="0.8.15" />
+				<shell name="mysql" command="mysql --version" min="5.1.26" max="5.1.34" />
+				<shell name="java" command="java -version" min="1.5.0" />
+				<shell name="doxygen" command="doxygen --help" min="1.5.6" />
+			</shells>
+		</dependencies>
+	</target>
+</project>

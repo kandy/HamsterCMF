@@ -1,0 +1,16 @@
+build
+.buildpath
+.DS_Store
+.cache/
+.project
+.settings
+.externalToolBuilders/
+*.log
+*.bak
+application/configs/application.ini
+application/configs/nginx.conf
+nbproject
+dic.txt
+tests/reports/
+httpd/
+test/

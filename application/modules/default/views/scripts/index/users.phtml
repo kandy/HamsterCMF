@@ -1,0 +1,5 @@
+<ul>
+	<li tal:repeat="user users"  >
+		<a href="/${user/username}/blog" tal:content="user/username" />
+	</li>
+</ul>

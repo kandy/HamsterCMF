@@ -1,0 +1,19 @@
+.messages{
+	margin-right: 5px;
+	margin-bottom: 5px;
+	border:1px solid #ccc;
+	-moz-border-radius: 5px;
+	padding: 1px 20px;
+}
+
+	.messages.code-success{
+		color: green;
+		border-color: green;
+		background-color: #cfc;
+	}
+
+	.messages.error{
+		color: red;
+		border-color: red;
+		background-color: #fcc;
+	}

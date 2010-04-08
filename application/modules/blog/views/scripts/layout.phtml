@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-type" content="text-html/ charset=utf-8" />
+    <link href="/static/css/main.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="favicon.ico" rel="shortcut icon"/>
+    <link href="/static/favicon.png" type="image/png" rel="shortcut icon"/>
+    <script charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="page" class="sizer">
+        <div class="clear header-height" ></div>
+        <div id="layout" >
+            <div id="content" >
+            <!-- Content -->
+                <!-- Center Col -->
+                <div class="center-col" tal:content="structure php: this.layout().content">
+                </div>
+                <!-- /Center Col -->
+
+                <!-- Right Col -->
+                <div class="right-col" tal:content="structure php: this.action('messages', 'index')">
+                </div>
+                <!-- /Right Col -->
+
+                <!-- Left Col -->
+                <div class="left-col">
+                    <h2>
+                        Navigation
+                    </h2>
+					<div tal:content="structure php: this.action('users', 'index')"></div>
+                </div>
+                <!-- /Left Col -->
+            <!-- Content -->
+            </div>
+        </div>
+
+        <div class="header-height sizer" id="header">
+            <!-- HEADER-->
+            <div class="window mainPanel">
+                <div class="wbody">
+                </div>
+                <div class="footer">
+                    <span class="botton"></span>
+                    <span class="icon">&#160;</span>
+                    <span class="text"></span>
+                </div>
+
+            </div>
+            <!-- /HEADER-->
+        </div>
+
+        <div class="clear footer-height" ></div>
+
+    </div>
+    <div class="footer-height sizer" id="footer">
+        <!-- Footer -->
+        <div class="wbody">
+            KAndy©2009
+        </div>
+        <!-- /Footer -->
+    </div>
+</body>
+</html>

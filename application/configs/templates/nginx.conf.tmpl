@@ -1,0 +1,16 @@
+server {
+	server_name ${server.main.host};
+	listen ${server.main.port};
+	set $werbroot ${server.webroot};
+
+	location / {
+		fastcgi_pass ${server.fcgi.host}:${server.fcgi.port};
+		
+		include ${path.nginx.fastcgi_params};
+		fastcgi_param SCRIPT_FILENAME $werbroot/index.php;
+	}
+
+	location /static {
+		root $werbroot;
+	}
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<stack>
+		<layout>index.xsl</layout>
+		<requests>
+			<request module="default" controller="auth" action="info" />
+			<request module="default" controller="auth" action="login" />
+		</requests>
+	</stack>
+</config>

@@ -1,0 +1,13 @@
+<div >
+	<div class="box blog-post" tal:repeat="blog blogs">
+		<h3>
+			<a href="/blog/post/${blog/id}/${blog/title}" tal:content="blog/title">Title</a>
+		</h3>
+		<div class="time-line" tal:content="blog/publishedAt"></div>
+		<div tal:content="blog/description"></div>
+	</div>
+	<div>
+		<a tal:condition="exists: prev" href="/${user/username}/blog/${prev}">Prev</a>
+		<a tal:condition="exists: next" href="/${user/username}/blog/${next}">Next</a>
+	</div>
+</div>

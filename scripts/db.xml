@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="db" default="help">
+	<taskdef classname="scripts.develop.Phing.Task.SchemaFormater" name="system-scheme-formater" />
+
+	<target name="_init" description="Phing constructor">
+		<echo>${environment}</echo>
+	</target>
+
+	<target name="help" description="Usage help">
+		<echo>Don't worry ${env.USER}, help is coming! </echo>
+		<echo>Try phing -l</echo>
+	</target>
+
+	<target name="createdb" depends="_init" description="Create database">
+		<pdo url="mysql:host=${resources.db.params.host}"
+			userid="${resources.db.params.username}"
+			password="${resources.db.params.password}"
+			onerror="abort">
+			create database if not exists `${resources.db.params.dbname}` charset utf8;
+		</pdo>
+	</target>
+	
+	<target name="freshdb" depends="_init, _drop-db-tables, _create-db-tables, _create-db-procedures, _apply-standard-inserts" description="Resets the database">
+		<echo>Db ${resources.db.params.dbname} is fresh</echo>
+	</target>
+
+	<target name="_create-db-procedures" description="Create db procedures and functions">
+		<echo>Creating stored procedures...</echo>
+		<pdo url="mysql:host=${resources.db.params.host};dbname=${resources.db.params.dbname}"
+			userid="${resources.db.params.username}"
+			password="${resources.db.params.password}"
+			delimiter="//">
+			<fileset dir="${path.sql}">
+				<include name="procedure/*"/>
+			</fileset>
+		</pdo>
+	</target>
+
+	<target name="_create-db-tables" description="Create db tables">
+		<echo>Creating fresh tables...</echo>
+		<pdo url="mysql:host=${resources.db.params.host};dbname=${resources.db.params.dbname}"
+			userid="${resources.db.params.username}"
+			password="${resources.db.params.password}">
+			<fileset dir="${path.sql}">
+				<include name="create/*sql"/>
+			</fileset>
+		</pdo>
+	</target>
+
+	<target name="_drop-db-tables" description="Drop db tables">
+		<echo>Dropping old tables...</echo>
+		<pdo url="mysql:host=${resources.db.params.host};dbname=${resources.db.params.dbname}"
+			userid="${resources.db.params.username}"
+			password="${resources.db.params.password}"
+			onerror="continue">
+			<fileset dir="${path.sql}">
+				<include name="drop.sql"/>
+			</fileset>
+		</pdo>
+	</target>
+
+	<target name="_apply-standard-inserts" description="Standart inserts...">
+		<echo>Standart inserts...</echo>
+		<pdo url="mysql:host=${resources.db.params.host};dbname=${resources.db.params.dbname}"
+			userid="${resources.db.params.username}"
+			password="${resources.db.params.password}">
+			<fileset dir="${path.sql}/insert/">
+				<include name="*.sql"/>
+			</fileset>
+		</pdo>
+	</target>
+
+	<target name="_delete-upload" description="Delete upload files">
+		<delete includeemptydirs="true">
+			<fileset dir="${resources.fileTransfer.destination}">
+				<include name="**/**" />
+				<exclude name=".gitignore" /> 
+			</fileset>  
+		</delete>
+	</target>
+	
+	<target name="format-schema"  depends="_init" description="Format DBDesigner4 schema to canonical view for simple merging">
+	</target>
+	
+</project>
