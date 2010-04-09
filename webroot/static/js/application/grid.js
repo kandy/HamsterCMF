@@ -71,7 +71,7 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 		
 		this.selModel = new Ext.grid.RowSelectionModel(this.singleSelect);
 		// init filter plugin
-		//this.plugins = [this.createGridFilters()];
+		this.plugins = [this.createGridFilters()];
 		//init store
 		this.ds = new Ext.data.JsonStore(this.createStoreConfig());
 		//atach event on exception
@@ -89,11 +89,12 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 	 * @protected
 	 */
 	onAfterGridRender: function() {
-		this.getStore().load();
+		this.getStore().load(); //@todo: check it can move to stire config (autoLoad)
 	},
 	
 	onException : function(){
-		App.Core.showInternalServerErrorMessageBox();
+        alert('Error: @todo: Create message box');
+		//App.Core.showInternalServerErrorMessageBox();
 	},
 	
 	/**
@@ -129,7 +130,7 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 	
 	/**
 	 * Get Filtres plugin, from columns list 	
-	 * type is ['numeric', 'string', 'date', 'list','boolean']
+	 * type is ['numeric', 'string', 'date', 'list', 'boolean']
 	 * 
 	 * @return Ext.ux.grid.GridFilters
 	 */
