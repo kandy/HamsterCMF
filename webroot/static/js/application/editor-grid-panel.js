@@ -1,13 +1,13 @@
 /**
  * @namespace App.grid
  */
-Ext.ns('App.grid')
+Ext.ns('App.grid');
 
 /**
  * Class use one configuration for create store, grid and filters
  * 
- * @class Defautl grid panel for our App.Core
- * @extends Ext.grid.GridPanel
+ * @class App.grid.EditorGridPanel Defautl grid panel for our App.Core
+ * @extends Ext.grid.EditorGridPanel
  * @constructor
  * @example
  * <code>
@@ -20,24 +20,33 @@ Ext.ns('App.grid')
 			align: 'right',
 			filter: { //add filter
 				type: 'numeric' //if not set type used defaultFilter.type
+			},
+			editor: {
+				xtype: 'textfield' // or other form fields editor 
 			}
 		}]
 	</code>
  */
-App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
-	/** @lends App.grid.GridPanel */
-	
+App.grid.EditorGridPanel = Ext.extend(Ext.grid.EditorGridPanel, {
+	/** @lends App.grid.EditorGridPanel */
+	url: null,
 	border: false,
 	loadMask: true,
-	forceFit: true,
 	
 	autoDestroy: false,
 	closable: true,
+	
+	viewConfig: {
+		forceFit: true
+	},
+
 	/**
 	 * 
 	 * @type {Object} 
 	 */
 	storeConfig: {
+		autoDestroy: true,
+		autoSave: false,
 		remoteSort: true,
 		method: 'POST',
 		idProperty: 'id',
@@ -45,9 +54,6 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 		totalProperty: 'total',
 		successProperty: 'success'
 		// need set url in inherit class for store work 
-	},
-	viewConfig: {
-		forceFit: true
 	},
 	singleSelect: false,
 	/**
@@ -59,15 +65,11 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 	},
 	
 	/**
-	 * InitComponent {@see Ext.grid.GridPanel.initComponent}
+	 * InitComponent {@see Ext.grid.EditorGridPanel.initComponent}
 	 * Create store, plugins, toolbar
 	 * @protected
 	 */
 	initComponent : function() {
-		if (this.url) {
-			this.storeConfig.url =  this.url;
-		}
-		
 		this.selModel = new Ext.grid.RowSelectionModel(this.singleSelect);
 		// init filter plugin
 		this.plugins = [this.createGridFilters()];
@@ -78,22 +80,89 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 		//init bottom toolbar use PagingToolbar
 		this.bbar = new Ext.PagingToolbar(this.createPagingToolbarConfig(this.ds, this.plugins));
 		//call parent init
-		App.grid.GridPanel.superclass.initComponent.call(this);
+		App.grid.EditorGridPanel.superclass.initComponent.call(this);
 		// set callback for render event
 		this.on('afterrender', this.onAfterGridRender, this);
+		
+		this.getBottomToolbar().add([
+				'-', {
+					text: 'Add',
+					handler: this.onAdd,
+					scope: this
+				}, {
+					text: 'Delete',
+					handler: this.onDelete,
+					scope: this
+				}, {
+					text: 'Save',
+					handler: this.onSave,
+					scope: this
+				}]);
+				
+		this.menu = new Ext.menu.Menu({ //todo: use grid.fireEvent(item.event)
+			grid: this.grid,
+			items: [{
+				text: 'Add',
+				handler: this.onAdd,
+				scope: this
+			}, {
+				text: 'Delete',
+				handler: this.onDelete,
+				scope: this
+			}, {
+				text: 'Save',
+				handler: this.onSave,
+				scope: this
+			}]
+		});
+		this.on('rowcontextmenu', this.onRowContextMenu, this);
 	},
 	
 	/**
-	 * On render event load data to store
+	 * Add grid menu
+	 * @param {App.grid.EditorGridPanel} grid
+	 * @param {Integer} rowIndex
+	 * @param {Ext.EventObject} e
+	 */
+	onRowContextMenu: function(grid, rowIndex, e){
+		e.preventDefault(); // do not show standard browser menu
+		this.menu.showAt([e.getPageX(),  e.getPageY()]);
+	},
+	/**
+	 * onAdd
+	 */
+	onAdd: function (btn, ev) {
+		this.store.add(new this.store.recordType({}));
+	},
+	/**
+	 * onDelete
+	 */
+	onDelete: function () {
+		var recs = this.getSelectionModel().getSelections();
+		if (!recs.length) {
+			return;
+		}
+		 
+		for (var i = 0; i < recs.length; i++) {
+			this.store.remove(recs[i]);
+		}
+		this.store.save();
+	},
+	/**
+	 * onSave
+	 */
+	onSave: function () {
+		this.store.save()
+	},	/**
+	 * On after render event load data to store
 	 * @protected
 	 */
 	onAfterGridRender: function() {
-		this.getStore().load(); //@todo: check it can move to stire config (autoLoad)
+		this.getStore().load();
 	},
 	
 	onException : function(){
-        alert('Error: @todo: Create message box');
-		//App.Core.showInternalServerErrorMessageBox();
+		alert('Editor-grid error');
 	},
 	
 	/**
@@ -101,16 +170,36 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 	 * @return {Object}
 	 */
 	createStoreConfig: function() {
-		var fields = [];
+		var storeConfig = {};
+		storeConfig.fields = [];
 		for( var i=0; i < this.columns.length; i++) {
 			//map grid fieds name to store fieds name  
 			var field = {
 					name: this.columns[i].dataIndex
 				};
-			fields[i] = field;
+			if (this.columns[i].type) {
+				field.type = this.columns[i].type;
+			}
+			storeConfig.fields[i] = field;
 		}
+		
+		storeConfig.writer = new Ext.data.JsonWriter();
+		
+		if (typeof this.url == 'undefined') {
+			throw 'Not set url in App.grid.EditorGridPanel';
+		}
+		
+		storeConfig.proxy = new Ext.data.HttpProxy({
+			api: {
+				read : this.url + '/grid/',
+				create : this.url + '/create/',
+				update : this.url + '/save/',
+				destroy : this.url + '/delete/'
+			}
+		});
+		
 		//add fields to storeConfig end return
-		return Ext.apply({fields:fields}, this.storeConfig);
+		return Ext.apply(storeConfig, this.storeConfig);
 	},
 	
 	/**
@@ -124,12 +213,12 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 			store: store,
 			plugins: plugins,
 			pageSize: 25
-		}
+		};
 	},
 	
 	/**
 	 * Get Filtres plugin, from columns list 	
-	 * type is ['numeric', 'string', 'date', 'list', 'boolean']
+	 * type is ['numeric', 'string', 'date', 'list','boolean']
 	 * 
 	 * @return Ext.ux.grid.GridFilters
 	 */
@@ -150,6 +239,3 @@ App.grid.GridPanel = Ext.extend(Ext.grid.GridPanel, {
 		return new Ext.ux.grid.GridFilters({filters: filters});
 	}
 });
-
-Ext.reg('App.grid.GridPanel', App.grid.GridPanel);
-

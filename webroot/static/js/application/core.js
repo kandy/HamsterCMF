@@ -8,7 +8,7 @@ App.Core = Ext.extend(Ext.util.Observable, {
 	PHPSESSID: 'PHPSESSID',
 	
 	getUrl: function(url){
-		return '/'+url;
+		return ''+ url;
 	},
     
 	logout : function() {
@@ -53,7 +53,9 @@ App.Core = Ext.extend(Ext.util.Observable, {
 			scope: this
 		});
 	},
-	
+	errorBox: function() {
+		
+	},
 	start : function() {
 		//add auto refresh for update session state
 		//new Ext.Updater("loading").startAutoRefresh(250, App.Core.getUrl('/auth/info'));
@@ -72,7 +74,7 @@ App.Core = Ext.extend(Ext.util.Observable, {
                     title: 'Help'
                 },{
                     xtype: 'App.grid.User',
-                    url: '/backoffice/account/grid'
+                    url: '/backoffice/users'
                 }],
                 id: 'tabber'
             },{
@@ -80,35 +82,13 @@ App.Core = Ext.extend(Ext.util.Observable, {
                 title: 'Navigation',
                 collapsible: true,
                 //treepanel
-                xtype: 'treepanel',
+                xtype: 'App.tree.TreePanel',
                 width: 200,
                 autoScroll: true,
-                split: true,
-                loader: new Ext.tree.TreeLoader(),
-                root: new Ext.tree.AsyncTreeNode({
-                    expanded: true,
-                    children: [{
-                        text: 'Menu Option 1',
-                        leaf: true
-                    }, {
-                        text: 'Menu Option 2',
-                        leaf: true
-                    }, {
-                        text: 'Menu Option 3',
-                        leaf: true
-                    }]
-                }),
-                rootVisible: false,
-                listeners: {
-                    click: function(n) {
-                        Ext.Msg.alert('Navigation Tree Click', 'You clicked: "' + n.attributes.text + '"');
-                    }
-                }
-
+                split: true
            }]
         });
         this.viewPort.show();
-        //this.viewPort.doLayout();
 	}
 });
 
